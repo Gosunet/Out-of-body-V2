@@ -83,6 +83,7 @@ public class InitSceneHumanoids : MonoBehaviour
     private int _nbRepetition;
     private int _nbDistance;
     private int _percentageDiff;
+    private float _scale;
 
     // Value of initial position of each humanoid
     private Vector3 _posHumanoidRight;
@@ -159,6 +160,16 @@ public class InitSceneHumanoids : MonoBehaviour
         if (_distanceMaximal > _maxDistance) _distanceMaximal = _maxDistance;
 
         TypeExercice = parameters[4].ToString();
+        string scale = parameters[5];
+        if(scale == "null" | scale == "0")
+        {
+            _scale = 1;
+        }
+        else
+        {
+            _scale = float.Parse(parameters[5]);
+        }
+
     }
 
     private void initModels()
@@ -170,13 +181,13 @@ public class InitSceneHumanoids : MonoBehaviour
 
         if (_typeExercice == Utils.TYPE_PILIER)
         {
-            _leftObject.transform.localScale = new Vector3(8 * humanoidBoxSize.x, 8 * humanoidBoxSize.y, 4 * humanoidBoxSize.z);
-            _rightObject.transform.localScale = new Vector3(8 * humanoidBoxSize.x, 8 * humanoidBoxSize.y, 4 * humanoidBoxSize.z);
+            _leftObject.transform.localScale = new Vector3(8 * humanoidBoxSize.x *  _scale, 8 * humanoidBoxSize.y, 4 * humanoidBoxSize.z * _scale);
+            _rightObject.transform.localScale = new Vector3(8 * humanoidBoxSize.x * _scale, 8 * humanoidBoxSize.y, 4 * humanoidBoxSize.z * _scale);
         }
         else
         {
             // Scale
-            _humanoidRight.transform.localScale = new Vector3(8, 8, 8);
+            _humanoidRight.transform.localScale = new Vector3(8* _scale, 8, 8* _scale);
 
             // Rotation des bras 
             _humanoidRight.transform.FindChild("python/Hips/Spine/Spine1/Spine2/Spine3/RightShoulder/RightShoulderExtra").transform.localRotation = Quaternion.Euler(-58f, -32f, 39.2f);
@@ -184,12 +195,14 @@ public class InitSceneHumanoids : MonoBehaviour
 
             // --------- Initilisation de l'humanoide de gauche        
             // Scale
-            _humanoidLeft.transform.localScale = new Vector3(8, 8, 8);
+            _humanoidLeft.transform.localScale = new Vector3(8* _scale, 8, 8* _scale);
 
             // Rotation des bras 
             _humanoidLeft.transform.FindChild("python/Hips/Spine/Spine1/Spine2/Spine3/RightShoulder/RightShoulderExtra").transform.localRotation = Quaternion.Euler(-98.2f, -55f, 39.2f);
             _humanoidLeft.transform.FindChild("python/Hips/Spine/Spine1/Spine2/Spine3/LeftShoulder/LeftShoulderExtra").transform.localRotation = Quaternion.Euler(-98, 55f, -39.2f);
         }
+        // multiplier l'offset par le scale 
+        offset = offset * _scale;
 
         _leftObject.transform.localPosition = new Vector3(-4, 0, 2);
         _rightObject.transform.localPosition = new Vector3(4, 0, 2);
